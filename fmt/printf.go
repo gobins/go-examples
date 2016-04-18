@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 )
 
 type paper struct {
@@ -30,4 +31,5 @@ func main() {
 	fmt.Printf("Struct printing with code point: %#v\n", p)
 
 	fmt.Printf("Printing type of a value: %T\n", p)
+	fmt.Fprintf(os.Stderr, "an %s\n", "error")
 }
