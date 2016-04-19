@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	log "github.com/Sirupsen/logrus"
 	"net"
 	"os"
 	"time"
@@ -12,9 +13,11 @@ func main() {
 	checkError(err)
 
 	listener, err := net.ListenTCP("tcp", tcpAddr)
+	log.Info("Starting TCP Listen on :", tcpAddr.Port)
 	checkError(err)
 
 	for {
+		log.Info("Accepting TCP connections")
 		conn, err := listener.Accept()
 		if err != nil {
 			continue
@@ -22,6 +25,7 @@ func main() {
 
 		daytime := time.Now().String()
 		conn.Write([]byte(daytime))
+		log.Info("Closing TCP connection")
 		conn.Close()
 	}
 }
