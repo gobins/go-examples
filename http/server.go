@@ -1,19 +1,32 @@
 package main
 
 import (
-	"io"
-	"net/http"
+	"net"
+	"time"
 
 	log "github.com/Sirupsen/logrus"
 )
 
-func Server(w http.ResponseWriter, r *http.Request) {
-	log.Info("Received Request")
-	io.WriteString(w, "Hi How are you!")
+func main() {
+	log.Info("Listenining on TCP Port 8080")
+	listener, err := net.Listen("tcp", ":8080")
+
+	if err != nil {
+		log.Error("Fatal Error: ", err.Error)
+	}
+	for {
+		log.Info("Handling client request")
+		conn, err := listener.Accept()
+		if err != nil {
+			continue
+		}
+
+		go handleClient(conn)
+	}
 }
 
-func main() {
-	http.HandleFunc("/", Server)
-	log.Info("Starting HTTP Server")
-	http.ListenAndServe(":8080", nil)
+func handleClient(conn net.Conn) {
+	defer conn.Close()
+	dateTime := time.Now().String()
+	conn.Write([]byte(dateTime))
 }
