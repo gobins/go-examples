@@ -10,6 +10,7 @@ import (
 func main() {
 	log.Info("Listenining on TCP Port 8080")
 	listener, err := net.Listen("tcp", ":8080")
+	net.Listen(net, laddr)
 
 	if err != nil {
 		log.Error("Fatal Error: ", err.Error)
