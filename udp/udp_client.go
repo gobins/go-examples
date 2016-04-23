@@ -4,6 +4,8 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"net"
 	"os"
+	"strconv"
+	"time"
 )
 
 func main() {
@@ -15,9 +17,17 @@ func main() {
 	udpConn, err := net.DialUDP("udp", nil, udpAddr)
 	handleError(err)
 
+	count := 1
+	var buffer [512]byte
 	for {
-		_, err := udpConn.Write([]byte("Ping"))
+		_, err := udpConn.Write([]byte(strconv.Itoa(count)))
 		handleError(err)
+		time.Sleep(1 * time.Second)
+		len, _, err1 := udpConn.ReadFromUDP(buffer[0:])
+		handleError(err1)
+		log.Info(string(buffer[0:len]))
+
+		count = count + 1
 	}
 }
 

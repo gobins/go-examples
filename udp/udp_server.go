@@ -16,17 +16,18 @@ func main() {
 	for {
 		log.Info("Waiting to serve clients")
 		handleClient(*udpConn)
+		udpConn.Close()
 	}
 }
 
 func handleClient(conn net.UDPConn) {
-	defer conn.Close()
+	//defer conn.Close()
 	var buffer [512]byte
 	for {
-		len, err := conn.Read(buffer[0:])
+		len, addr, err := conn.ReadFromUDP(buffer[0:])
 		handleError(err)
 		log.Info(string(buffer[0:len]))
-		_, err2 := conn.Write(buffer[0:len])
+		_, err2 := conn.WriteToUDP(buffer[0:len], addr)
 		handleError(err2)
 	}
 }
